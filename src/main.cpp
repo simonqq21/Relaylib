@@ -1,18 +1,26 @@
 #include <Arduino.h>
+#include "Relay.h"
 
-// put function declarations here:
-int myFunction(int, int);
+Relay rl1(5);
+String cmd; 
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(115200);
+  rl1.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  if (Serial.available()) {
+    cmd = Serial.readStringUntil('\n');
+    Serial.printf("cmd=%s", cmd);
+    if (cmd == "1") {
+      rl1.set(true);
+    }
+    else if (cmd == "2") {
+      Serial.printf("rl1 state = %d\n", rl1.readState());
+    }
+    else {
+      rl1.set(false);
+    }
+  }
 }
